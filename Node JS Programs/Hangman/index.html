@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<head>
+    <title>----TEST ZONE!!!----</title>
+</head>
+<body>
+    <script>
+        let map = [
+            ["* ", "* ", "* ", "* ", "* ", "* ", "* ", "* "],
+            ["* ", "# ", "# ", "# ", "# ", "# ", "* ", "* "],
+            ["* ", "# ", "* ", "* ", "* ", "# ", "* ", "* "],
+            ["* ", "# ", "* ", "* ", "* ", "0 ", "* ", "* "],
+            ["* ", "# ", "* ", "* ", "\\_ ", "| ", "_\/ ", "* "],
+            ["* ", "# ", "* ", "* ", "* ", "| ", "* ", "* "],
+            ["* ", "# ", "* ", "* ", "\/ ", "* ", "\\ ", "* "],
+            ["* ", "# ", "* ", "* ", "* ", "* ", "* ", "* "],
+            ["* ", "# ", "# ", "# ", "# ", "# ", "* ", "* "],
+            ["* ", "* ", "* ", "* ", "* ", "* ", "* ", "* "],
+        ];
+
+        for (j = 0; j < 10; j++){
+            document.write("<p>")
+            for (i = 0; i < 8; i++){
+                if(map[j][i] === "* "){
+                    document.write(map[j][i]);
+                } else {
+                    document.write("<strong style='color:blue'>" + map[j][i] + "</strong>");
+                };
+            };
+            document.write("</p>")
+        };
+    </script>
+    <input type="text" placeholder="Type " id="inputID">
+    <button type="button" onclick="afterInputGameplay();">Confirm</button>
+    <script>
+        let lives = 7;
+
+        let letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+
+        let words = ["cheese", "burger", "taco", "pizza", "steak", "chicken"];
+
+        const dialog = (livesLeft, lettersLeft, wordsLeft) => {
+            
+        };
+
+        function onReset(){
+            randomNumber =  Math.floor(Math.random() * (words.length + 1));
+            wordInPlay = words[randomNumber];
+            splitWord = wordInPlay.split("");
+            console.log(splitWord);
+        };
+
+        function getInputValue(){
+            let input = document.getElementById("inputID").value;
+            return input;
+        };
+
+        function validateInput(){
+            for (h = 0; h < 26; h++){
+                if (letters[h] === getInputValue()){
+                    alert("true");
+                    return true;
+                    break;
+                };
+            };
+            alert("false");
+            return false;
+        };
+
+        function afterInputGameplay(){
+            let guessVerification = validateInput();
+            if (guessVerification === false){
+                let guess = getInputValue();
+                alert(guess + " is not a Valid Input, Please Try Again")
+            } else if (guessVerification === true){
+                let guess = getInputValue();
+                if (splitWord.includes(guess)){
+                    console.log( guess + " is in " + wordInPlay);
+                };
+            };
+        };
+    </script>
+</body>
