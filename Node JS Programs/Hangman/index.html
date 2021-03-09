@@ -3,9 +3,14 @@
     <title>----TEST ZONE!!!----</title>
 </head>
 <body>
+    <style>
+        *  {
+            font-family: 'Courier New', monospace;
+        }
+    </style>
     <script>
 
-        function imageUpdate(lives) {
+        function myHangMan(lives) {
             let map = [
                 ["* ", "* ", "* ", "* ", "* ", "* ", "* ", "* "],
                 ["* ", "# ", "# ", "# ", "# ", "# ", "* ", "* "],
@@ -22,41 +27,41 @@
                 case 0:
                     map[3][5] = "0 ";
                     map[4][5] = "| ";
-                    map[4][4] = "\\_ ";
-                    map[4][6] = "_\/ ";
-                    map[5][5] = "|";
-                    map[6][4] = "\/";
-                    map[6][6] = "\\";
+                    map[4][4] = "\\ ";
+                    map[4][6] = "\/ ";
+                    map[5][5] = "| ";
+                    map[6][4] = "\/ ";
+                    map[6][6] = "\\ ";
                     return map;
                     break;
                 case 1:
                     map[3][5] = "0 ";
                     map[4][5] = "| ";
-                    map[4][4] = "\\_ ";
-                    map[4][6] = "_\/ ";
-                    map[5][5] = "|";
-                    map[6][4] = "\/";
+                    map[4][4] = "\\ ";
+                    map[4][6] = "\/ ";
+                    map[5][5] = "| ";
+                    map[6][4] = "\/ ";
                     return map;
                     break;
                 case 2:
                     map[3][5] = "0 ";
                     map[4][5] = "| ";
-                    map[4][4] = "\\_ ";
-                    map[4][6] = "_\/ ";
-                    map[5][5] = "|";
+                    map[4][4] = "\\ ";
+                    map[4][6] = "\/ ";
+                    map[5][5] = "| ";
                     return map;
                     break;
                 case 3:
                     map[3][5] = "0 ";
                     map[4][5] = "| ";
-                    map[4][4] = "\\_ ";
-                    map[4][6] = "_\/ ";
+                    map[4][4] = "\\ ";
+                    map[4][6] = "\/ ";
                     return map;
                     break;
                 case 4:
                     map[3][5] = "0 ";
                     map[4][5] = "| ";
-                    map[4][4] = "\\_ ";
+                    map[4][4] = "\\ ";
                     return map;
                     break;
                 case 5:
@@ -74,8 +79,20 @@
             }
         };
         
-        function buildImage(imageArray){
-            let map = imageUpdate(lives);
+        let imageLines = [];
+
+        function buildImage(){
+            let imageBox = document.getElementById("imageBox");
+            for (let i = 0; i < 10; i++){
+                let p = document.createElement("p");
+                imageLines.push(p);
+                imageBox.appendChild(p);
+                for (let j = 0; j < 8; j++){
+                    let span = document.createElement("span");
+                    p.appendChild(span);
+                }
+            }
+            /*let map = imageUpdate(lives);
             for (j = 0; j < 10; j++){
                 document.write("<p>")
                 for (i = 0; i < 8; i++){
@@ -86,8 +103,30 @@
                     };
                 };
                 document.write("</p>")
-            };
+            };*/
         }
+
+        function updateImage(lives){
+            let map = myHangMan(lives);
+            console.log(map);
+            for(let i = 0; i < 10; i++){
+                let p = imageLines[i];
+                for(let j = 0; j < 8; j++){
+                    let span = p.getElementsByTagName("span")[j];
+                    if (map[i][j] != "* "){
+                        span.style.fontWeight = 1000;
+                        span.style.color = "blue";
+                    } else {
+                        span.style.fontWeight = "normal";
+                        span.style.color = "black";
+                    }
+                    span.innerText = map[i][j];
+                    
+                }
+                
+            }
+        };
+
         let lives = 7;
 
         let letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
@@ -114,22 +153,22 @@
 
         function buildReactiveWord(){
             reactiveWord = createEmptyWordCopy();
-            document.write("<p>");
+            let reactiveElement = document.getElementById("reactiveWord");
+            // document.write("<p>");
+            let word = "";
             for (l = 0; l < reactiveWord.length; l++){
-                document.write(" " + reactiveWord[l]);
+               word = word.concat("_ ");
+
+                //document.write(" " + reactiveWord[l]);
             }
-            document.write("</p>");
+            //reactiveElement.innerHTML=thing;
+            //document.write("</p>");
 
         }
 
         function updateReactiveWord(location, guess){
             reactiveWord.splice(location, 1, guess);
-            document.write("<p>");
-            for (l = 0; l < reactiveWord.length; l++){
-                document.write(" " + reactiveWord[l]);
-            }
-            document.write("</p>");
-        }
+        };
 
         function getInputValue(){
             let input = document.getElementById("inputID").value;
@@ -166,11 +205,15 @@
 
         function beginRunTime(){
             buildImage();
+            updateImage(0);
             buildReactiveWord();
         };
 
-        beginRunTime();
+        //beginRunTime();
+        window.onload=beginRunTime;
     </script>
+    <div id="imageBox"></div>
+    <p id="reactiveWord"></p>
     <input type="text" placeholder="Type " id="inputID">
     <button type="button" onclick="afterInputGameplay();">Confirm</button>
 </body>
