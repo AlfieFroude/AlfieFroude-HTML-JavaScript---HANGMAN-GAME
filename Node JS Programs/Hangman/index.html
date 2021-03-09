@@ -4,50 +4,132 @@
 </head>
 <body>
     <script>
-        let map = [
-            ["* ", "* ", "* ", "* ", "* ", "* ", "* ", "* "],
-            ["* ", "# ", "# ", "# ", "# ", "# ", "* ", "* "],
-            ["* ", "# ", "* ", "* ", "* ", "# ", "* ", "* "],
-            ["* ", "# ", "* ", "* ", "* ", "0 ", "* ", "* "],
-            ["* ", "# ", "* ", "* ", "\\_ ", "| ", "_\/ ", "* "],
-            ["* ", "# ", "* ", "* ", "* ", "| ", "* ", "* "],
-            ["* ", "# ", "* ", "* ", "\/ ", "* ", "\\ ", "* "],
-            ["* ", "# ", "* ", "* ", "* ", "* ", "* ", "* "],
-            ["* ", "# ", "# ", "# ", "# ", "# ", "* ", "* "],
-            ["* ", "* ", "* ", "* ", "* ", "* ", "* ", "* "],
-        ];
 
-        for (j = 0; j < 10; j++){
-            document.write("<p>")
-            for (i = 0; i < 8; i++){
-                if(map[j][i] === "* "){
-                    document.write(map[j][i]);
-                } else {
-                    document.write("<strong style='color:blue'>" + map[j][i] + "</strong>");
-                };
-            };
-            document.write("</p>")
+        function imageUpdate(lives) {
+            let map = [
+                ["* ", "* ", "* ", "* ", "* ", "* ", "* ", "* "],
+                ["* ", "# ", "# ", "# ", "# ", "# ", "* ", "* "],
+                ["* ", "# ", "* ", "* ", "* ", "# ", "* ", "* "],
+                ["* ", "# ", "* ", "* ", "* ", "* ", "* ", "* "],
+                ["* ", "# ", "* ", "* ", "* ", "* ", "* ", "* "],
+                ["* ", "# ", "* ", "* ", "* ", "* ", "* ", "* "],
+                ["* ", "# ", "* ", "* ", "* ", "* ", "* ", "* "],
+                ["* ", "# ", "* ", "* ", "* ", "* ", "* ", "* "],
+                ["* ", "# ", "# ", "# ", "# ", "# ", "* ", "* "],
+                ["* ", "* ", "* ", "* ", "* ", "* ", "* ", "* "],
+            ];
+            switch(lives){
+                case 0:
+                    map[3][5] = "0 ";
+                    map[4][5] = "| ";
+                    map[4][4] = "\\_ ";
+                    map[4][6] = "_\/ ";
+                    map[5][5] = "|";
+                    map[6][4] = "\/";
+                    map[6][6] = "\\";
+                    return map;
+                    break;
+                case 1:
+                    map[3][5] = "0 ";
+                    map[4][5] = "| ";
+                    map[4][4] = "\\_ ";
+                    map[4][6] = "_\/ ";
+                    map[5][5] = "|";
+                    map[6][4] = "\/";
+                    return map;
+                    break;
+                case 2:
+                    map[3][5] = "0 ";
+                    map[4][5] = "| ";
+                    map[4][4] = "\\_ ";
+                    map[4][6] = "_\/ ";
+                    map[5][5] = "|";
+                    return map;
+                    break;
+                case 3:
+                    map[3][5] = "0 ";
+                    map[4][5] = "| ";
+                    map[4][4] = "\\_ ";
+                    map[4][6] = "_\/ ";
+                    return map;
+                    break;
+                case 4:
+                    map[3][5] = "0 ";
+                    map[4][5] = "| ";
+                    map[4][4] = "\\_ ";
+                    return map;
+                    break;
+                case 5:
+                    map[3][5] = "0 ";
+                    map[4][5] = "| ";
+                    return map;
+                    break;
+                case 6:
+                    map[3][5] = "0 ";
+                    return map;
+                    break;
+                case 7:
+                    return map;
+                    break;
+            }
         };
-    </script>
-    <input type="text" placeholder="Type " id="inputID">
-    <button type="button" onclick="afterInputGameplay();">Confirm</button>
-    <script>
+        
+        function buildImage(imageArray){
+            let map = imageUpdate(lives);
+            for (j = 0; j < 10; j++){
+                document.write("<p>")
+                for (i = 0; i < 8; i++){
+                    if(map[j][i] === "* "){
+                        document.write(map[j][i]);
+                    } else {
+                        document.write("<strong style='color:blue'>" + map[j][i] + "</strong>");
+                    };
+                };
+                document.write("</p>")
+            };
+        }
         let lives = 7;
 
         let letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
-        let words = ["cheese", "burger", "taco", "pizza", "steak", "chicken"];
+        var words = ["cheese", "burger", "taco", "pizza", "steak", "chicken"];
 
-        const dialog = (livesLeft, lettersLeft, wordsLeft) => {
-            
-        };
-
-        function onReset(){
-            randomNumber =  Math.floor(Math.random() * (words.length + 1));
+        function randomWordGenerator(){
+            randomNumber =  Math.floor(Math.random() * (words.length));
             wordInPlay = words[randomNumber];
             splitWord = wordInPlay.split("");
             console.log(splitWord);
+            return splitWord;
         };
+
+        function createEmptyWordCopy(){
+            let splitWord = randomWordGenerator();
+            let emptyWord = [];
+            for (let k = 0; k < splitWord.length; k++) {
+                emptyWord.push("_");
+            };
+            console.log(emptyWord);
+            return emptyWord;
+        }
+
+        function buildReactiveWord(){
+            reactiveWord = createEmptyWordCopy();
+            document.write("<p>");
+            for (l = 0; l < reactiveWord.length; l++){
+                document.write(" " + reactiveWord[l]);
+            }
+            document.write("</p>");
+
+        }
+
+        function updateReactiveWord(location, guess){
+            reactiveWord.splice(location, 1, guess);
+            document.write("<p>");
+            for (l = 0; l < reactiveWord.length; l++){
+                document.write(" " + reactiveWord[l]);
+            }
+            document.write("</p>");
+        }
 
         function getInputValue(){
             let input = document.getElementById("inputID").value;
@@ -75,8 +157,20 @@
                 let guess = getInputValue();
                 if (splitWord.includes(guess)){
                     console.log( guess + " is in " + wordInPlay);
+                    let location = splitWord.indexOf(guess);
+                    updateReactiveWord(location, guess);
+
                 };
             };
         };
+
+        function beginRunTime(){
+            buildImage();
+            buildReactiveWord();
+        };
+
+        beginRunTime();
     </script>
+    <input type="text" placeholder="Type " id="inputID">
+    <button type="button" onclick="afterInputGameplay();">Confirm</button>
 </body>
