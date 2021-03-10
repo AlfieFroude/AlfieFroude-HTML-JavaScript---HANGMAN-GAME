@@ -141,34 +141,48 @@
             return splitWord;
         };
 
-        function createEmptyWordCopy(){
-            let splitWord = randomWordGenerator();
-            let emptyWord = [];
-            for (let k = 0; k < splitWord.length; k++) {
-                emptyWord.push("_");
-            };
-            console.log(emptyWord);
-            return emptyWord;
-        }
-
         function buildReactiveWord(){
-            reactiveWord = createEmptyWordCopy();
+            emptyWord = randomWordGenerator();
             let reactiveElement = document.getElementById("reactiveWord");
-            // document.write("<p>");
-            let word = "";
-            for (l = 0; l < reactiveWord.length; l++){
-               word = word.concat("_ ");
-
-                //document.write(" " + reactiveWord[l]);
+            let reactiveWord = "";
+            for (l = 0; l < emptyWord.length; l++){
+                reactiveWord = reactiveWord.concat("_ ");
             }
-            //reactiveElement.innerHTML=thing;
-            //document.write("</p>");
+            console.log(reactiveWord);
+            reactiveElement.innerHTML=reactiveWord;
 
         }
 
         function updateReactiveWord(location, guess){
-            reactiveWord.splice(location, 1, guess);
+            //reactiveWord.splice(location, 1, guess);
+            console.log(location);
+            console.log(guess);
+            let reactiveElement = document.getElementById("reactiveWord");
+            let pullWord = reactiveElement.innerHTML;
+            console.log(pullWord);
+            let breakWord = pullWord.replaceAll(" ", "");
+            console.log(breakWord);
+            breakWord = breakWord.split("");
+            console.log(breakWord);
+                for(let j = 0; j < location.length; j++){
+                    breakWord.splice(location[j], 1, guess);
+                }
+                for(let i = 0; i < breakWord.length; i++){
+                    breakWord[i] = breakWord[i] + " ";
+                }
+            console.log(breakWord);
+            let fixWord = breakWord.join("");
+            console.log(fixWord);
+            reactiveElement.innerHTML=fixWord;
+            this.checkWord = breakWord;
+            console.log(this.checkWord);
+            this.checkWord = this.checkWord.join("");
+            this.checkWord = this.checkWord.replaceAll(" ", "");
+            this.checkWord = this.checkWord.split("");
+            console.log(this.checkWord);
+            console.log(this.checkWord);
         };
+        
 
         function getInputValue(){
             let input = document.getElementById("inputID").value;
@@ -178,42 +192,102 @@
         function validateInput(){
             for (h = 0; h < 26; h++){
                 if (letters[h] === getInputValue()){
-                    alert("true");
                     return true;
                     break;
                 };
             };
-            alert("false");
             return false;
         };
 
         function afterInputGameplay(){
-            let guessVerification = validateInput();
-            if (guessVerification === false){
-                let guess = getInputValue();
-                alert(guess + " is not a Valid Input, Please Try Again")
-            } else if (guessVerification === true){
-                let guess = getInputValue();
-                if (splitWord.includes(guess)){
-                    console.log( guess + " is in " + wordInPlay);
-                    let location = splitWord.indexOf(guess);
-                    updateReactiveWord(location, guess);
-
+            if (this.gameEnded === true){
+                refresh();
+                return;
+            }else{
+                let guessVerification = validateInput();
+                if (guessVerification === false){
+                    let guess = getInputValue();
+                    alert(guess + " is not a Valid Input, Please Try Again")
+                } else if (guessVerification === true){
+                    let guess = getInputValue();
+                    if (splitWord.includes(guess)){
+                        console.log( guess + " is in " + wordInPlay);
+                        let location = [];
+                        for(i = 0; i < splitWord.length; i++){
+                            if (splitWord[i] == guess){
+                                location.push(i);
+                            }
+                        }
+                        updateReactiveWord(location, guess);
+                        document.getElementById("inputID").value = "";
+                        console.log(splitWord + " debug");
+                        console.log(this.checkWord + " debug");
+                        if (JSON.stringify(splitWord)==JSON.stringify(this.checkWord)){
+                            console.log("poop");
+                            win();
+                        }
+                    } else{
+                        lives = lives -1;
+                        alert(guess + " is incorrect! " + lives + " Lives Left!")
+                        updateImage(lives);
+                        updateWrongGuesses(guess);
+                        if (lives === 0){
+                            gameOver();
+                        }
+                        document.getElementById("inputID").value = "";
+                    }
                 };
-            };
+            }
+        };
+
+        function buildWrongGuesses(){
+            sinBin = [];
+            let sinBox = document.getElementById("usedLettersBox");
+            sinBox.innerHTML=sinBin;
+        }
+
+        function updateWrongGuesses(guess){
+            sinBin.push(guess);
+            for(let i = 0; i < letters.length; i++){
+                if(guess === letters[i]){
+                    letters.splice(i, 1);
+                }
+            }
+            let sinBox = document.getElementById("usedLettersBox");
+            sinBox.innerHTML=sinBin;
+        }
+
+        function gameOver(){
+            this.gameEnded = true;
+            alert("--GAME OVER-- You Lose!");
+            alert("The word was " + splitWord.join(""));
+        };
+
+        function win(){
+            this.gameEnded = true;
+            alert("--YOU WIN--");
+        };
+
+        function refresh(){
+            alert("The game has ended. Refresh to PLAY AGAIN...")
+
         };
 
         function beginRunTime(){
             buildImage();
-            updateImage(0);
+            updateImage(lives);
             buildReactiveWord();
+            buildWrongGuesses();
         };
 
+        this.gameEnded = false;
         //beginRunTime();
         window.onload=beginRunTime;
     </script>
     <div id="imageBox"></div>
     <p id="reactiveWord"></p>
-    <input type="text" placeholder="Type " id="inputID">
-    <button type="button" onclick="afterInputGameplay();">Confirm</button>
+    <p>Used Letters:</p>
+    <p id="usedLettersBox"></p>
+    <input type="text" placeholder="Enter Guess " id="inputID">
+    <button id="button" type="button" onclick="afterInputGameplay();">Confirm</button>
 </body>
