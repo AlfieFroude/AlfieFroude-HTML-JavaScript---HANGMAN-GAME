@@ -92,23 +92,10 @@
                     p.appendChild(span);
                 }
             }
-            /*let map = imageUpdate(lives);
-            for (j = 0; j < 10; j++){
-                document.write("<p>")
-                for (i = 0; i < 8; i++){
-                    if(map[j][i] === "* "){
-                        document.write(map[j][i]);
-                    } else {
-                        document.write("<strong style='color:blue'>" + map[j][i] + "</strong>");
-                    };
-                };
-                document.write("</p>")
-            };*/
         }
 
         function updateImage(lives){
             let map = myHangMan(lives);
-            console.log(map);
             for(let i = 0; i < 10; i++){
                 let p = imageLines[i];
                 for(let j = 0; j < 8; j++){
@@ -137,7 +124,6 @@
             randomNumber =  Math.floor(Math.random() * (words.length));
             wordInPlay = words[randomNumber];
             splitWord = wordInPlay.split("");
-            console.log(splitWord);
             return splitWord;
         };
 
@@ -148,39 +134,27 @@
             for (l = 0; l < emptyWord.length; l++){
                 reactiveWord = reactiveWord.concat("_ ");
             }
-            console.log(reactiveWord);
             reactiveElement.innerHTML=reactiveWord;
 
         }
 
         function updateReactiveWord(location, guess){
-            //reactiveWord.splice(location, 1, guess);
-            console.log(location);
-            console.log(guess);
             let reactiveElement = document.getElementById("reactiveWord");
             let pullWord = reactiveElement.innerHTML;
-            console.log(pullWord);
             let breakWord = pullWord.replaceAll(" ", "");
-            console.log(breakWord);
             breakWord = breakWord.split("");
-            console.log(breakWord);
                 for(let j = 0; j < location.length; j++){
                     breakWord.splice(location[j], 1, guess);
                 }
                 for(let i = 0; i < breakWord.length; i++){
                     breakWord[i] = breakWord[i] + " ";
                 }
-            console.log(breakWord);
             let fixWord = breakWord.join("");
-            console.log(fixWord);
             reactiveElement.innerHTML=fixWord;
             this.checkWord = breakWord;
-            console.log(this.checkWord);
             this.checkWord = this.checkWord.join("");
             this.checkWord = this.checkWord.replaceAll(" ", "");
             this.checkWord = this.checkWord.split("");
-            console.log(this.checkWord);
-            console.log(this.checkWord);
         };
         
 
@@ -211,7 +185,6 @@
                 } else if (guessVerification === true){
                     let guess = getInputValue();
                     if (splitWord.includes(guess)){
-                        console.log( guess + " is in " + wordInPlay);
                         let location = [];
                         for(i = 0; i < splitWord.length; i++){
                             if (splitWord[i] == guess){
@@ -220,10 +193,7 @@
                         }
                         updateReactiveWord(location, guess);
                         document.getElementById("inputID").value = "";
-                        console.log(splitWord + " debug");
-                        console.log(this.checkWord + " debug");
                         if (JSON.stringify(splitWord)==JSON.stringify(this.checkWord)){
-                            console.log("poop");
                             win();
                         }
                     } else{
@@ -281,12 +251,11 @@
         };
 
         this.gameEnded = false;
-        //beginRunTime();
         window.onload=beginRunTime;
     </script>
     <div id="imageBox"></div>
     <p id="reactiveWord"></p>
-    <p>Used Letters:</p>
+    <p>Wrong Guesses:</p>
     <p id="usedLettersBox"></p>
     <input type="text" placeholder="Enter Guess " id="inputID">
     <button id="button" type="button" onclick="afterInputGameplay();">Confirm</button>
