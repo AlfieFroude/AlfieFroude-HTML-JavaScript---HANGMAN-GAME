@@ -8,6 +8,9 @@
             font-family: 'Courier New', monospace;
         }
     </style>
+    <h>HANGMAN GAME (1991 Edition) - Alfie Froude 10/03/2021</h>
+    <p>Theme: Food </p>
+    <p>Aim:<br>-Guess the hidden word based on the theme above. <br>-You can only guess 1 letter at a time. <br>-If your guess is incorrect, you lose a life!<br>-If your guess is correct, the word will begin to fill in!<br>-If you lose all lives, it's GAMEOVER!<br>-If you fill the word in, you WIN!</p>
     <script>
 
         function myHangMan(lives) {
@@ -198,6 +201,8 @@
                         }
                     } else{
                         lives = lives -1;
+                        let displayLives = document.getElementById("currentLives");
+                        displayLives.innerHTML=lives;
                         alert(guess + " is incorrect! " + lives + " Lives Left!")
                         updateImage(lives);
                         updateWrongGuesses(guess);
@@ -243,10 +248,15 @@
 
         };
 
+        function buildLives(){
+            let displayLives = document.getElementById("currentLives");
+            displayLives.innerHTML=lives;
+        };
         function beginRunTime(){
             buildImage();
             updateImage(lives);
             buildReactiveWord();
+            buildLives();
             buildWrongGuesses();
         };
 
@@ -255,6 +265,8 @@
     </script>
     <div id="imageBox"></div>
     <p id="reactiveWord"></p>
+    <p>Lives:</p>
+    <p id="currentLives"></p>
     <p>Wrong Guesses:</p>
     <p id="usedLettersBox"></p>
     <input type="text" placeholder="Enter Guess " id="inputID">
