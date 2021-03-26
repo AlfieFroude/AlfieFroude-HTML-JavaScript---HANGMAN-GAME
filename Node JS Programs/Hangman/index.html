@@ -26,6 +26,8 @@
                 ["* ", "# ", "# ", "# ", "# ", "# ", "* ", "* "],
                 ["* ", "* ", "* ", "* ", "* ", "* ", "* ", "* "],
             ];
+            /*Above is an 2D Array used to show the graphic of a hangman, the array is updated
+            everytime the player loses a life, creatingg more and more of the hangman*/
             switch(lives){
                 case 0:
                     map[3][5] = "0 ";
@@ -80,19 +82,34 @@
                     return map;
                     break;
             }
+            /*This is a switch case statement, it reacts to the amount of lives the player has left,
+            it updates the 2D array to create more of the hangman*/
         };
         
         let imageLines = [];
+        /*This is an empty array which is a place holder for where the hangman graphic will go,
+        it is later used to update the graphic without updating the whole page every time the player
+        loses a life*/
 
         function buildImage(){
+            /*Builds the empty/basic hangman graphic, by calling html <p> tags with <span> tags embedded,
+            which are easily accessible and can be specifically updated without touching the rest of the page.*/
             let imageBox = document.getElementById("imageBox");
+            /*Assigns imageBox to the html element <div id="imageBox"></div>*/
             for (let i = 0; i < 10; i++){
+                /*For Loops, loops 10 times*/
                 let p = document.createElement("p");
+                /*Assigns <p> tag element to p*/
                 imageLines.push(p);
+                /*Assigns p into the imageLines array above this function*/
                 imageBox.appendChild(p);
+                /*Appends p into imagesBox, so adds <p> tags into the imageBox<div>*/
                 for (let j = 0; j < 8; j++){
+                    /*For loop inside for loop, repeats 8 times every time for loop above loops once*/
                     let span = document.createElement("span");
+                    /*Assigns a new <span> element to span*/
                     p.appendChild(span);
+                    /*Appends the span element / <span> tags to p / <p> tags recently appended to imageBox*/
                 }
             }
         }
