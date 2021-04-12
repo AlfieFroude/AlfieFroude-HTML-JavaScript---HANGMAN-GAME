@@ -27,7 +27,7 @@
                 ["* ", "* ", "* ", "* ", "* ", "* ", "* ", "* "],
             ];
             /*Above is an 2D Array used to show the graphic of a hangman, the array is updated
-            everytime the player loses a life, creatingg more and more of the hangman*/
+            every time the player loses a life, creating more and more of the hangman*/
             switch(lives){
                 case 0:
                     map[3][5] = "0 ";
@@ -115,11 +115,17 @@
         }
 
         function updateImage(lives){
+            /*updates the graphic*/
             let map = myHangMan(lives);
+            /*Updates the hangman graphic relative to the amount of lives left*/
             for(let i = 0; i < 10; i++){
+                /*For Loops, loops 10 times*/
                 let p = imageLines[i];
+                /*Assigns p to the imageLines at element i in the array*/
                 for(let j = 0; j < 8; j++){
+                    /*For Loops, loops 8 times*/
                     let span = p.getElementsByTagName("span")[j];
+                    /*assigns span to the <span> tag found in the p, which is the current element of imageLines*/
                     if (map[i][j] != "* "){
                         span.style.fontWeight = 1000;
                         span.style.color = "blue";
@@ -127,6 +133,7 @@
                         span.style.fontWeight = "normal";
                         span.style.color = "black";
                     }
+                    /*The if else statement helps to give the graphic some life, by giving certain characters bold and colour*/
                     span.innerText = map[i][j];
                     
                 }
@@ -141,49 +148,77 @@
         var words = ["cheese", "burger", "taco", "pizza", "steak", "chicken"];
 
         function randomWordGenerator(){
+            /*using the Math library found in js, this function gets a random word from the "words" array above*/
             randomNumber =  Math.floor(Math.random() * (words.length));
             wordInPlay = words[randomNumber];
+            /*Assigns the random word to wordInPlay*/
             splitWord = wordInPlay.split("");
+            /*Splits and assigns the random word to splitWord*/
             return splitWord;
+            /*returns splitWord to the emptyWord in the function below where it was called*/
         };
 
         function buildReactiveWord(){
+            /*Creates the blank reactive word at the start of the game*/
             emptyWord = randomWordGenerator();
+            /*calls randomWordGenerator*/
             let reactiveElement = document.getElementById("reactiveWord");
+            /*Assigns the <p> html element with id=reactiveWord to reactiveElement*/
             let reactiveWord = "";
+            /*empty variable*/
             for (l = 0; l < emptyWord.length; l++){
+                /*for loop that loops the amount of times equal to the number of characters in the random word*/
                 reactiveWord = reactiveWord.concat("_ ");
+                /*Assigns the a "_ " (underscore and space) to reactiveWord*/
             }
             reactiveElement.innerHTML=reactiveWord;
+            /*Assigns the reactiveWord to the reactiveElement <p> tags html element,
+            this creates the blank word at the start of the game*/
 
         }
 
         function updateReactiveWord(location, guess){
+            /*updates the reactive word if the player makes a correct guess*/
             let reactiveElement = document.getElementById("reactiveWord");
+            /*Assigns the <p> html element with id=reactiveWord to reactiveElement*/
             let pullWord = reactiveElement.innerHTML;
+            /*Assigns the content of reactiveElement.innerHTMl to pullWord, an example would be the blank word "_ _ _ _ "*/
             let breakWord = pullWord.replaceAll(" ", "");
+            /*Gets pullWord and replaces all the spaces with nothing and assigns it to breakWord, an example is "_ _ _ _ " to "____"*/
             breakWord = breakWord.split("");
+            /*splits breakWord up into individual characters, so "____" to "_""_""_""_"*/
                 for(let j = 0; j < location.length; j++){
+                    /*loops the amount equal to the amount of elements in the location array*/
                     breakWord.splice(location[j], 1, guess);
+                    /*splices the breakWord array at the position of location[j] and replaces it with the value of guess*/
                 }
                 for(let i = 0; i < breakWord.length; i++){
+                    /*loops the amount equal to the amount of elements in the breakWord array*/
                     breakWord[i] = breakWord[i] + " ";
+                    /*adds a space back to the end of each element in breakWord*/
                 }
             let fixWord = breakWord.join("");
+            /*assigns breakWord to fixWord by putting all the elements in breakWord together into one variable in fixWord*/
             reactiveElement.innerHTML=fixWord;
+            /*assigns fixWord to reactiveElement.innerHTMl, finally updating the word for the user*/
             this.checkWord = breakWord;
             this.checkWord = this.checkWord.join("");
             this.checkWord = this.checkWord.replaceAll(" ", "");
             this.checkWord = this.checkWord.split("");
+            /*Used create an simple version of the current word the user has go to, with no spaces, 
+            this word is later compared to the randomWord picked at the start of the game, if it is the same then the player has won,
+            if not continue*/
         };
         
 
         function getInputValue(){
+            /*gets the players input from the input box on the page and returns the value as input*/
             let input = document.getElementById("inputID").value;
             return input;
         };
 
         function validateInput(){
+            /*if the input from getInputValue is equal to any of the elements in letters, true is returned else it returns false*/
             for (h = 0; h < 26; h++){
                 if (letters[h] === getInputValue()){
                     return true;
@@ -197,56 +232,84 @@
             if (this.gameEnded === true){
                 refresh();
                 return;
+                /*checks if the game has ended, if yes it calls refresh()*/
             }else{
                 let guessVerification = validateInput();
+                /*calls validateInput and assigns return value to guessVerification*/
                 if (guessVerification === false){
                     let guess = getInputValue();
+                    /*assigns getInputValue to guess*/
                     alert(guess + " is not a Valid Input, Please Try Again")
+                    /*if false an alert is made telling the player the input is not valid*/
                 } else if (guessVerification === true){
                     let guess = getInputValue();
+                    /*assigns getInputValue to guess*/
                     if (splitWord.includes(guess)){
+                        /*checks if splitWord includes the players guess*/
                         let location = [];
+                        /*creates blank array location*/
                         for(i = 0; i < splitWord.length; i++){
+                            /*loops that amount equal to the number of characters in splitWord*/
                             if (splitWord[i] == guess){
+                                /*checks if guess is equal to any of the characters found in splitWord*/
                                 location.push(i);
+                                /*assigns the position value of the correct character guess to the location array*/
                             }
                         }
                         updateReactiveWord(location, guess);
+                        /*calls updateReactiveWord along with the location array and guess*/
                         document.getElementById("inputID").value = "";
+                        /*resets the input box*/
                         if (JSON.stringify(splitWord)==JSON.stringify(this.checkWord)){
+                            /*checks if the current word is equal to the randomWord, if true win() is called*/
                             win();
                         }
                     } else{
+                        /*if splitWord does not include the player guess then this code is run*/
                         lives = lives -1;
+                        /*lives are updated*/
                         let displayLives = document.getElementById("currentLives");
                         displayLives.innerHTML=lives;
+                        /*displays current lives on the page*/
                         alert(guess + " is incorrect! " + lives + " Lives Left!")
+                        /*an alert is called to tell the player they have lost a life due to a wrong guess*/
                         updateImage(lives);
+                        /*updateImage() is called parsing lives*/
                         updateWrongGuesses(guess);
+                        /*updateWrongGuesses is called parsing guess*/
                         if (lives === 0){
+                            /*if lives equal 0, gameOver() is called*/
                             gameOver();
                         }
                         document.getElementById("inputID").value = "";
+                        /*resets the input box*/
                     }
                 };
             }
         };
 
         function buildWrongGuesses(){
+            /*creates an empty array for all the wrong guesses to go*/
             sinBin = [];
+            /*empty array*/
             let sinBox = document.getElementById("usedLettersBox");
             sinBox.innerHTML=sinBin;
+            /*builds the sinBox <p> tags html element*/
         }
 
         function updateWrongGuesses(guess){
             sinBin.push(guess);
+            /*guess is added to the sinBin array*/
             for(let i = 0; i < letters.length; i++){
+                /*loops that amount equal to the number of characters in letters*/
                 if(guess === letters[i]){
                     letters.splice(i, 1);
+                    /*removes the guess from the letters array*/
                 }
             }
             let sinBox = document.getElementById("usedLettersBox");
             sinBox.innerHTML=sinBin;
+            /*updates the sinBox <p> tags html element*/
         }
 
         function gameOver(){
@@ -268,6 +331,7 @@
         function buildLives(){
             let displayLives = document.getElementById("currentLives");
             displayLives.innerHTML=lives;
+            /*builds the display <p> tags html element*/
         };
         function beginRunTime(){
             buildImage();
